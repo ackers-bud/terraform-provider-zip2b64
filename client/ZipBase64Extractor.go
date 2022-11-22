@@ -6,6 +6,7 @@ import (
     "encoding/base64"
     "errors"
     "io/ioutil"
+    "strings"
 )
 
 // ZipExtract takes a Base64 string which is a representation of a zip archive.
@@ -31,7 +32,7 @@ func ZipExtract(base64Encodedfile string, filenameToExtract string) (string, err
 
         // fmt.Printf("Name of the File in the Archive is %s", Singlefile.Name)
 
-        if Singlefile.Name == filenameToExtract {
+        if removeRoot(Singlefile.Name) == filenameToExtract {
             SinglefileContents, err := Singlefile.Open()
 
             if err != nil {
@@ -50,4 +51,21 @@ func ZipExtract(base64Encodedfile string, filenameToExtract string) (string, err
     }
 
     return "", errors.New("file not found in archive")
+}
+
+func removeRoot(filePathandName string) string {
+    //
+    // The File name is typically the name of the archive and then the file  eg "secure-connect-bud-josh-develop-default-ade/config.json"
+    // We only really what the /config.json bit.    So this removes the root part of the filename
+    //
+    fparts := strings.Split(filePathandName, "/")
+    out := ""
+    // put back together
+    for i, fpart := range fparts {
+        // fmt.Println("v:", fpart)
+        if i != 0 {
+            out = out + "/" + fpart
+        }
+    }
+    return out
 }

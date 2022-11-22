@@ -1,6 +1,7 @@
 package provider
 
 import (
+    "github.com/ackers-bud/terraform-provider-zip2b64/client"
     "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -12,9 +13,15 @@ func resourceUser() *schema.Resource {
         Delete: Delete,
 
         Schema: map[string]*schema.Schema{
-            "url": {
+            "base64file": {
                 Type:     schema.TypeString,
                 Required: true,
+            },
+
+            "filename": {
+                Description: "the filename",
+                Type:        schema.TypeString,
+                Required:    true,
             },
 
             "id": {
@@ -23,16 +30,10 @@ func resourceUser() *schema.Resource {
                 Computed:    true,
             },
 
-            "status_code": {
-                Description: "the returned http status code",
-                Type:        schema.TypeInt,
-                Optional:    true,
-            },
-
-            "response_body_base64": {
+            "filecontents_base64": {
                 Description: "The Returned body base64 encoded",
                 Type:        schema.TypeString,
-                Optional:    true,
+                Computed:    true,
             },
         },
     }
@@ -40,8 +41,15 @@ func resourceUser() *schema.Resource {
 
 func Create(d *schema.ResourceData, meta interface{}) error {
     // CreateDiagnostics := diag.Diagnostics{}
-    // url := d.Get("url").(string)
-    // d.SetId(url)
+
+    base64file := d.Get("base64file").(string)
+    filenameToExtract := d.Get("filename").(string)
+
+    filecontents_base64, _ := client.ZipExtract(base64file, filenameToExtract)
+
+    _ = d.Set("filecontents_base64", filecontents_base64)
+
+    d.SetId(filenameToExtract)
     return nil
 }
 

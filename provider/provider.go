@@ -11,7 +11,7 @@ func New(version string) func() *schema.Provider {
     return func() *schema.Provider {
         p := &schema.Provider{
             ResourcesMap: map[string]*schema.Resource{
-                "http-zip2b64": resourceUser(),
+                "zip2b64": resourceUser(),
             },
         }
 
