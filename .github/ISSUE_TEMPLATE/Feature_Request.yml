@@ -1,6 +1,6 @@
 name: Feature Request
 description: Something is missing or could be improved.
-labels: ["enhancement"]
+labels: [ "enhancement" ]
 body:
   - type: markdown
     attributes:

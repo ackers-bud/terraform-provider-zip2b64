@@ -38,7 +38,8 @@ Below are guidelines for well-formed issues of each type.
 
 ### Bug Reports
 
-* [ ] **Test against latest release**: Make sure you test against the latest available version of Terraform and the provider.
+* [ ] **Test against latest release**: Make sure you test against the latest available version of Terraform and the
+  provider.
   It is possible we may have already fixed the bug you're experiencing.
 * [ ] **Search for duplicates**: It's helpful to keep bug reports consolidated to one thread, so do a quick search
   on existing bug reports to check if anybody else has reported the same thing.
@@ -70,16 +71,19 @@ before raising a pull request.
   working in the right direction.
 * [ ] **Tests**: It may go without saying, but every new patch should be covered by tests wherever possible.
   For bug-fixes, tests to prove the fix is valid. For features, tests to exercise the new code paths.
-* [ ] **Go Modules**: We use [Go Modules](https://github.com/golang/go/wiki/Modules) to manage and version our dependencies.
+* [ ] **Go Modules**: We use [Go Modules](https://github.com/golang/go/wiki/Modules) to manage and version our
+  dependencies.
   Please make sure that you reflect dependency changes in your pull requests appropriately
   (e.g. `go get`, `go mod tidy` or other commands).
   Refer to the [dependency updates](#dependency-updates) section for more information about how
   this project maintains existing dependencies.
-* [ ] **Changelog**: Refer to the [changelog](#changelog) section for more information about how to create changelog entries.
+* [ ] **Changelog**: Refer to the [changelog](#changelog) section for more information about how to create changelog
+  entries.
 
 ### Dependency Updates
 
-Dependency management is performed by [Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates).
+Dependency management is performed
+by [Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates).
 Where possible, dependency updates should occur through that system to ensure all Go module files are appropriately
 updated and to prevent duplicated effort of concurrent update submissions.
 Once available, updates are expected to be verified and merged to prevent latent technical debt.

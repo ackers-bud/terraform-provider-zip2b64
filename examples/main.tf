@@ -1,5 +1,3 @@
-
-
 resource "http-b64" "provisioningzipfile" {
   provider = http2b64
   url      = "http://localhost/secure-connect-bud-josh-develop-default-ade.zip"
