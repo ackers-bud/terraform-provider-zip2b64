@@ -6,28 +6,22 @@ NOW := $(shell date -u +'%Y%m%d-%H%M%S')
 build:
 	@go build -o bin/terraform-provider-zip2b64
 
-
-lint:
-	golangci-lint run
+lint: fmt
+	@golangci-lint run
 
 fmt:
-	gofmt -s -w -e .
+	@gofmt -s -w -e .
 
 test:
-	go test -v -cover -timeout=120s -parallel=4 ./...
+	@go test -v -cover -timeout=120s -parallel=4 ./...
 
 testacc:
 	TF_ACC=1 go test -v -cover -timeout 120m ./...
 
+generate:
+	@go generate
 
-commitmaster:
-	@git add .
-	@git commit -a -m "Update $(NOW)"
-	@/Users/markackroyd/.shell/bump -p v patch
-	@git push --all
-	@git push --tags
-
-commit:
+commit: fmt generate test
 	@git add .
 	@git commit -a -m "Update $(NOW)"
 	@git push

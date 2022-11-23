@@ -1,87 +1,78 @@
 package provider
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/ackers-bud/terraform-provider-zip2b64/client"
-    "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-    "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/ackers-bud/terraform-provider-zip2b64/client"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceUser() *schema.Resource {
-    return &schema.Resource{
-        Create: Create,
-        Update: Update,
-        Read:   ReadUrl,
-        Delete: Delete,
+	return &schema.Resource{
+		Create: Create,
+		Update: Update,
+		Read:   ReadUrl,
+		Delete: Delete,
 
-        Schema: map[string]*schema.Schema{
-            "base64file": {
-                Type:     schema.TypeString,
-                Required: true,
-            },
+		Schema: map[string]*schema.Schema{
+			"base64file": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 
-            "filename": {
-                Description: "the filename",
-                Type:        schema.TypeString,
-                Required:    true,
-            },
+			"filename": {
+				Description: "the filename",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
 
-            "id": {
-                Description: "The ID of this resource.",
-                Type:        schema.TypeString,
-                Computed:    true,
-            },
+			"id": {
+				Description: "The ID of this resource.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 
-            "filecontents_base64": {
-                Description: "The Returned body base64 encoded",
-                Type:        schema.TypeString,
-                Computed:    true,
-            },
-        },
-    }
+			"filecontents_base64": {
+				Description: "The Returned body base64 encoded",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
+		},
+	}
 }
 
 func Create(d *schema.ResourceData, meta interface{}) error {
 
-    CreateDiagnostics := diag.Diagnostics{}
+	base64file := d.Get("base64file").(string)
+	filenameToExtract := d.Get("filename").(string)
 
-    base64file := d.Get("base64file").(string)
-    filenameToExtract := d.Get("filename").(string)
+	filecontentsBase64, err := client.ZipExtract(base64file, filenameToExtract)
+	if err != nil {
+		return fmt.Errorf("error extracting file '%s' from base64 string error: '%v'", filenameToExtract, err)
+	}
 
-    filecontentsBase64, err := client.ZipExtract(base64file, filenameToExtract)
-    if err != nil {
-        CreateDiagnostics = append(CreateDiagnostics, diag.Diagnostic{
-            Summary: "Error Extracting file",
-            Detail:  fmt.Sprintf("Error Extracting '%s' from zip file error: %v", filenameToExtract, err),
-        })
-    }
+	err = d.Set("filecontents_base64", filecontentsBase64)
+	if err != nil {
+		return fmt.Errorf("error setting filecontents_base64 '%v'", err)
+	}
 
-    err = d.Set("filecontents_base64", filecontentsBase64)
-    if err != nil {
-        CreateDiagnostics = append(CreateDiagnostics, diag.Diagnostic{
-            Summary: "Error setting extracted file info",
-            Detail:  fmt.Sprintf("Error Extracting '%s' from zip file error: %v", filenameToExtract, err),
-        })
-    }
-
-    d.SetId(filenameToExtract)
-    return nil
+	d.SetId(filenameToExtract)
+	return nil
 }
 
 func Update(d *schema.ResourceData, meta interface{}) error {
 
-    return ReadUrl(d, meta)
+	return ReadUrl(d, meta)
 }
 
 func ReadUrl(d *schema.ResourceData, meta interface{}) error {
 
-    return nil
+	return nil
 }
 
 func Delete(d *schema.ResourceData, meta interface{}) error {
 
-    d.SetId("")
+	d.SetId("")
 
-    return nil
+	return nil
 }
