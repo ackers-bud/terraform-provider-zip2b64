@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceUser() *schema.Resource {
+func resourcezip2b64() *schema.Resource {
 	return &schema.Resource{
 		Create: Create,
 		Update: Update,
