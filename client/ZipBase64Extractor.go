@@ -29,7 +29,7 @@ func ZipExtract(base64Encodedfile string, filenameToExtract string) (string, err
 	// Go through all files in the Archive
 	for _, Singlefile := range ZipReader.File {
 
-		// fmt.Printf("Name of the File in the Archive is %s", Singlefile.Name)
+		// fmt.Printf("Name of the File in the Archive is %s formatted it is '%s'", Singlefile.Name, removeRoot(Singlefile.Name))
 		if removeRoot(Singlefile.Name) == filenameToExtract {
 			SinglefileContents, err := Singlefile.Open()
 
@@ -54,6 +54,11 @@ func ZipExtract(base64Encodedfile string, filenameToExtract string) (string, err
 func removeRoot(filePathandName string) string {
 	// The File name is typically the name of the archive and then the file  eg "secure-connect-bud-josh-develop-default-ade/config.json"
 	// We only really what the /config.json bit.    So this removes the root part of the filename
+	// if there is no / just return the filename
+	if !strings.Contains(filePathandName, "/") {
+		return filePathandName
+	}
+
 	fparts := strings.Split(filePathandName, "/")
 	out := ""
 	// put back together
