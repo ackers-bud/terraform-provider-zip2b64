@@ -10,8 +10,8 @@ import (
 )
 
 // ZipExtract takes a Base64 string which is a representation of a zip archive.
-//    the filenameToExtract - is a file in Zip Archive that needs to be
-//    extracted
+// the filenameToExtract - is a file in Zip Archive that needs to be
+// extracted.
 func ZipExtract(base64Encodedfile string, filenameToExtract string) (string, error) {
 
 	// Convert the Base64 string to a stream of Bytes
